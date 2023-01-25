@@ -1,6 +1,6 @@
 using ClientsAgenda.Contracts.Requests;
 using ClientsAgenda.Contracts.Responses;
-using ClientsAgenda.Models;
+using ClientsAgenda.Mappers;
 using ClientsAgenda.Services;
 using FastEndpoints;
 using Microsoft.AspNetCore.Authorization;
@@ -19,23 +19,9 @@ public class UpdateClientEndpoint : Endpoint<UpdateClientRequest, ClientResponse
 
     public async override Task HandleAsync(UpdateClientRequest request, CancellationToken ct)
     {
-        // TODO: Implement mapper
-        var client = new Client
-        {
-            Id = request.Id,
-            FirstName = request.FirstName,
-            LastName = request.LastName,
-            Email = request.Email,
-            Phone = request.Phone
-        };
+        var client = request.ToClient();
         await _clientService.UpdateAsync(client);
         
-        await SendOkAsync(new ClientResponse {
-            Id = client.Id,
-            FirstName = client.FirstName,
-            LastName = client.LastName,
-            Email = client.Email,
-            Phone = client.Phone
-        }, ct);
+        await SendOkAsync(client.ToClientResponse(), ct);
     } 
 }

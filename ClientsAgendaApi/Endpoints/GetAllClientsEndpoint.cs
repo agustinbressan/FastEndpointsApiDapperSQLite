@@ -1,5 +1,6 @@
 
 using ClientsAgenda.Contracts.Responses;
+using ClientsAgenda.Mappers;
 using ClientsAgenda.Services;
 using FastEndpoints;
 using Microsoft.AspNetCore.Authorization;
@@ -20,17 +21,9 @@ public class GetAllClientsEndpoint : EndpointWithoutRequest
     {
         var clients = await _clientService.GetAllAsync();
 
-        // TODO: Implement mapper
         var clientsResponse = new GetAllClientsResponse
         {
-            Clients = clients.Select(x => new ClientResponse
-            {
-                Id = x.Id,
-                FirstName = x.FirstName,
-                LastName = x.LastName,
-                Email = x.Email,
-                Phone = x.Phone
-            }),
+            Clients = clients.Select(x => x.ToClientResponse()),
         };
 
         await SendOkAsync(clientsResponse, ct);

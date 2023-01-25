@@ -1,5 +1,6 @@
 using ClientsAgenda.Models;
 using ClientsAgenda.Repositories;
+using ClientsAgenda.Mappers;
 
 namespace ClientsAgenda.Services;
 
@@ -16,15 +17,7 @@ public class ClientService : IClientService
     {
         var clients = await _clientRepository.GetAllAsync();
 
-        // TODO: Implement mapper
-        return clients.Select(x => new Client
-        {
-            Id = Guid.Parse(x.Id),
-            FirstName = x.FirstName,
-            LastName = x.LastName,
-            Email = x.Email,
-            Phone = x.Phone
-        });
+        return clients.Select(x => x.ToClient());
     }
 
     public async Task<bool> CreateAsync(Client client)
@@ -41,15 +34,7 @@ public class ClientService : IClientService
     {
         var clientDto = await _clientRepository.GetAsync(id);
 
-        // TODO: Implement mapper -> this will resolve the null return code smell 
-        return clientDto is not null ? new Client
-        {
-            Id = Guid.Parse(clientDto.Id),
-            FirstName = clientDto.FirstName,
-            LastName = clientDto.LastName,
-            Email = clientDto.Email,
-            Phone = clientDto.Phone
-        } : null;
+        return clientDto?.ToClient();
     }
 
     public async Task<bool> DeleteAsync(Guid id)

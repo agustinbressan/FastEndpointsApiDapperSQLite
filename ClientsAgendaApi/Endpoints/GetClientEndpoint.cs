@@ -1,5 +1,6 @@
 using ClientsAgenda.Contracts.Requests;
 using ClientsAgenda.Contracts.Responses;
+using ClientsAgenda.Mappers;
 using ClientsAgenda.Services;
 using FastEndpoints;
 using Microsoft.AspNetCore.Authorization;
@@ -26,16 +27,6 @@ public class GetClientEndpoint : Endpoint<GetClientRequest, ClientResponse>
             return;
         }
 
-        // TODO: Implement mapper
-        var clientResponse = new ClientResponse
-        {
-            Id = client.Id,
-            FirstName = client.FirstName,
-            LastName = client.LastName,
-            Email = client.Email,
-            Phone = client.Phone
-        };
-
-        await SendOkAsync(clientResponse, ct);
+        await SendOkAsync(client.ToClientResponse(), ct);
     }
 }
